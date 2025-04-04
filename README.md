@@ -9,8 +9,15 @@ This process is specific to replacing windows on the Microsoft Surface Book 2, b
     1. Download the appropriate `.iso` file from [ubuntu.com](https://ubuntu.com).
     2. Insert a USB drive into your computer.
     3. Create the bootable usb (on linux) by doing the following:
-        1. Find the mount point of your USB by searching the results of `sudo fdisk -l`. E.g. if you see `/dev/sda1` then your USB is mounted at `/dev/sda`.
-        2. Run `sudo dd if=/your/iso/file/path of=/dev/your-usb bs=4M status=progress conv=fsync`
+        1. Find the mount point of your USB by searching the results of
+        ```sh
+        sudo fdisk -l
+        # e.g. if you see /dev/sda1 then your USB is mounted at /dev/sda (without the number)
+        ```
+        2. Run
+        ```sh
+        sudo dd if=/your/iso/file/path of=/dev/your-usb bs=4M status=progress conv=fsync
+        ```
         3. (For windows) use Rufus
 2. Enter the BIOS/UEFI for the Surface Book 2 by holding **power** and **volume up** while booting. Release when the windows logo shows up so you don't just turn it off again. In UEFI, look for some kind of boot settings and make sure USB boot is highest priority.
 3. Ensure settings are saved and restart computer. It will take you through setting up Ubuntu Server. Make sure you select that you want to wipe the hard drive and replace it with Ubuntu Server.
@@ -46,8 +53,14 @@ chown root:root /etc/netplan/01-wifi.yaml
 
 ## Setting up `ssh`
 Then I set up `openssh` so I could at least connect to it on the local network. Pretty simple stuff:
-1. `sudo apt install openssh`
-2. Make sure its running: `sudo systemctl enable ssh`
+1. Run:
+```sh
+sudo apt install openssh
+```
+2. Make sure its running:
+```sh
+sudo systemctl enable ssh
+```
 3. Generate and public key from client devices.
 4. (Optional) edit `/etc/ssh/sshd_config` to enforce password and ssh authentication.
 
