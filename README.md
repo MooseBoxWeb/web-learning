@@ -115,6 +115,7 @@ nvim /etc/nginx/sites-available/default
 I set my root directory to be `/var/www/public`.
 
 ## Git repo
+### Server-side setup
 To update the web repo, I'm using a **bare git repository**, which is a repository that doesn't have a working tree. I set it up like so:
 ```sh
 mkdir -p /var/repos/moosebox.git
@@ -129,3 +130,12 @@ GIT_WORK_TREE=/var/www git checkout -f
 
 * A bare directory doesn't have a working tree, so by setting `GIT_WORK_TREE`, I'm directing Git to update files in a different directory.
 * Then, `git checkout -f` forces Git to check out the current branch's contents into the working tree we just defined.
+
+### Developer/client-side setup
+Once you have the production git repo set up, you want to create a repo on your local machine and add your serers bare git repo as a remote repo:
+```
+# once you've created the repo
+git remote add production ssh://username@moosebox.net/var/repos/moosebox.git
+```
+
+* Using `production` here just tells git that when you refer to `production` you're referring to the repository you just specified. Most of the time up to this point, you've just used `origin`. You're just creating an **alias** for the server.
