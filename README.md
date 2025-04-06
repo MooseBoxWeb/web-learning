@@ -82,3 +82,50 @@ tailscale status    # see current connection status and list of connected device
 sudo tailscale down # disconnect tailscale service
 ```
 
+# Setting up a website (web server)
+
+## Nginx
+Nginx seems to be generally agreed upon as the better option for me since I don't use anything that requires apache specifically, and my setup will be pretty straightforward I think. To set up:
+
+```sh
+sudo apt update
+sudo apt install nginx -y # -y is to also install dependencies
+
+
+# start and enable nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx # enable means it runs at boot
+
+# check status
+systemctl status nginx
+```
+
+## Firewall edits
+You might need to configure your firewall also:
+```sh
+sudo ufw allow 'Nginx Full'
+```
+
+## Nginx config
+Nginx config can be set by:
+```sh
+nvim /etc/nginx/sites-available/default
+```
+
+I set my root directory to be `/var/www/public`.
+
+## Git repo
+To update the web repo, I'm using a **bare git repository**, which is a repository that doesn't have a working tree. I set it up like so:
+```sh
+mkdir -p /var/repos/moosebox.git
+cd /var/repos/moosebox.git
+git init --bare
+```
+
+This puts a bunch of files in there by default, but what you really want is the `hooks` directory. Create a new hook and it will run every time you push something to it. To have it update my web server, I created the following web hook:
+```sh
+GIT_WORK_TREE=/var/www git checkout -f
+```
+
+* A bare directory doesn't have a working tree, so by setting `GIT_WORK_TREE`, I'm directing Git to update files in a different directory.
+* Then, `git checkout -f` forces Git to check out the current branch's contents into the working tree we just defined.
